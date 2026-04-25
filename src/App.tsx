@@ -4,6 +4,7 @@ import { FaGitAlt, FaMarkdown } from 'react-icons/fa6';
 import { SiGoogledocs } from 'react-icons/si';
 import { SiConfluence, SiGraphql, SiJira, SiMiro, SiNotion, SiOpenapiinitiative } from 'react-icons/si';
 import { TbApi, TbSchema } from 'react-icons/tb';
+import { CorumModelWindow } from './components/CorumModelWindow';
 import { useScrollProgress } from './hooks/useScrollProgress';
 import { ParticleScene } from './particle/ParticleScene';
 import { resolveSectionFocus } from './particle/sectionFocus';
@@ -37,6 +38,10 @@ export default function App() {
   const isMobile = typeof window !== 'undefined' ? window.innerWidth <= 760 : false;
   const sectionFocus = resolveSectionFocus(scrollProgress, isMobile);
   const sectionOneReveal = Math.max(0, Math.min(1, 1 - Math.abs(scrollProgress - 0.2) / 0.17));
+  const sectionTwoReveal = Math.max(0, Math.min(1, 1 - Math.abs(scrollProgress - 0.38) / 0.19));
+  const sectionTwoDelta = scrollProgress - 0.38;
+  const sectionTwoParallax =
+    -Math.sign(sectionTwoDelta) * Math.pow(Math.min(Math.abs(sectionTwoDelta) / 0.16, 1), 1.05) * 560;
 
   return (
     <main className="page">
@@ -95,17 +100,28 @@ export default function App() {
       </section>
 
       <section className="section tone-dark" data-focus-section>
-        <div className="section-copy">
-          <p className="section-kicker">02 / Introducing Corum</p>
-          <h2>Every model.<br/> In one place. <br/><span className="coral">Connected.</span></h2>
-          <div>
-            <ul>
-            <li>Everything is modelled together</li>
-            <li>Trace relationships across APIs, events, and models</li>
-            <li>Field level lineage</li>
-            <li>Understand the impact of changes</li>
-            <li>Import OpenApi, AsyncAPI, and other specifications</li>
-            </ul>
+        <div className="section-copy section-copy-wide">
+          <div className="corum-layout">
+            <div className="corum-window-wrap">
+              <CorumModelWindow reveal={sectionTwoReveal} parallax={sectionTwoParallax} />
+              <p className="corum-window-note">
+                Illustrative pseudo-YAML for concept preview, not the exact production source format.
+              </p>
+            </div>
+
+            <div className="corum-copy">
+              <p className="section-kicker">02 / Introducing Corum</p>
+              <h2>Every model.<br/> In one place. <br/><span className="coral">Connected.</span></h2>
+              <div className="corum-panel">
+                <ul className="challenges-list">
+                  <li>Every model is represented as structured pseudo-YAML</li>
+                  <li>Properties and schema live together in one source of truth</li>
+                  <li>Connections between models remain visible at node level</li>
+                  <li>Field-level lineage stays explicit without context bloat</li>
+                  <li>Design impact can be traced before code is generated</li>
+                </ul>
+              </div>
+            </div>
           </div>
         </div>
       </section>

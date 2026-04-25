@@ -15,12 +15,12 @@ type FocusPocket = {
 
 const desktopPockets: FocusPocket[] = [
   { x: 0, y: 0, zoom: 1 },
-  { x: -0.36, y: 0.2, zoom: 1.14 },
+  { x: 0.36, y: 0.2, zoom: 1.45 },
   { x: -0.42, y: 0.1, zoom: 1.22 },
   { x: 0.38, y: -0.06, zoom: 1.19 },
-  { x: -0.28, y: 0.2, zoom: 1.17 },
-  { x: 0, y: 0, zoom: 1.34 },
-  { x: 0.28, y: -0.18, zoom: 1.15 }
+  { x: 1.3, y: 0.4, zoom: 1.3 },
+  { x: 0, y: 0, zoom: 2 },
+  { x: 0.95, y: -0.28, zoom: 0.95 }
 ];
 
 export const focusPocketCount = desktopPockets.length;

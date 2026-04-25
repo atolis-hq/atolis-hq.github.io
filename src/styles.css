@@ -76,10 +76,10 @@ select {
   z-index: 1;
   min-height: 112vh;
   display: flex;
-  align-items: center;
+  align-items: flex-start;
   scroll-snap-align: center;
   scroll-snap-stop: always;
-  padding: 12vh clamp(1.25rem, 5vw, 5rem);
+  padding: 20vh clamp(1.25rem, 5vw, 5rem) 12vh;
 }
 
 .section:nth-of-type(2n + 1) {
@@ -236,7 +236,7 @@ h2 {
     min-height: 105vh;
     align-items: flex-start;
     justify-content: flex-start;
-    padding-top: 18vh;
+    padding-top: 10vh;
   }
 
   .section:nth-of-type(2n + 1) {

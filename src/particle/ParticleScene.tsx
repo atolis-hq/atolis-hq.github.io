@@ -49,6 +49,7 @@ export function ParticleScene({ focus, progress }: ParticleSceneProps) {
   const focusRef = useRef(focus);
   const progressRef = useRef(progress);
   const [labelOverlays, setLabelOverlays] = useState<LabelOverlay[]>([]);
+  let isMobileViewport = typeof window !== 'undefined' ? window.innerWidth < 760 : false;
 
   useEffect(() => {
     focusRef.current = focus;
@@ -118,6 +119,7 @@ export function ParticleScene({ focus, progress }: ParticleSceneProps) {
       const width = host.clientWidth;
       const height = host.clientHeight;
       const aspect = width / Math.max(height, 1);
+      isMobileViewport = window.innerWidth < 760;
 
       camera.left = -aspect;
       camera.right = aspect;
@@ -211,27 +213,29 @@ export function ParticleScene({ focus, progress }: ParticleSceneProps) {
       const worldPosition = new THREE.Vector3();
       const projectedPosition = new THREE.Vector3();
 
-      for (let index = 0; index < runtimeNodes.length; index += 1) {
-        const node = nodes[index];
-        if (!node.label) {
-          continue;
-        }
+      if (!isMobileViewport) {
+        for (let index = 0; index < runtimeNodes.length; index += 1) {
+          const node = nodes[index];
+          if (!node.label) {
+            continue;
+          }
 
-        const opacity = resolveLabelOpacity(node, currentProgress);
-        if (opacity <= 0) {
-          continue;
-        }
+          const opacity = resolveLabelOpacity(node, currentProgress);
+          if (opacity <= 0) {
+            continue;
+          }
 
-        runtimeNodes[index].mesh.getWorldPosition(worldPosition);
-        worldPosition.x += node.size * 1.35 * sceneRig.scale.x;
-        projectedPosition.copy(worldPosition).project(camera);
-        projectedLabels.push({
-          id: node.id,
-          opacity,
-          text: node.label,
-          x: (projectedPosition.x * 0.5 + 0.5) * width,
-          y: (-projectedPosition.y * 0.5 + 0.5) * height
-        });
+          runtimeNodes[index].mesh.getWorldPosition(worldPosition);
+          worldPosition.x += node.size * 1.35 * sceneRig.scale.x;
+          projectedPosition.copy(worldPosition).project(camera);
+          projectedLabels.push({
+            id: node.id,
+            opacity,
+            text: node.label,
+            x: (projectedPosition.x * 0.5 + 0.5) * width,
+            y: (-projectedPosition.y * 0.5 + 0.5) * height
+          });
+        }
       }
 
       setLabelOverlays(projectedLabels);

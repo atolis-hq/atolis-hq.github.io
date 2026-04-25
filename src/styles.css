@@ -90,6 +90,10 @@ select {
   width: min(620px, 100%);
 }
 
+.section-copy-wide {
+  width: min(95%, 1300px);
+}
+
 .hero-section {
   min-height: 120vh;
   align-items: flex-start;
@@ -192,6 +196,101 @@ h2 {
   color: #f4f1e8;
 }
 
+.challenges-layout {
+  margin-top: 2rem;
+  display: grid;
+  grid-template-columns: minmax(280px, 0.9fr) minmax(420px, 1.1fr);
+  gap: clamp(1.2rem, 3vw, 2rem);
+  align-items: start;
+}
+
+.challenges-panel {
+  padding: clamp(1.2rem, 2vw, 1.6rem);
+  border: 1px solid rgba(16, 24, 33, 0.12);
+  border-radius: 18px;
+  background: rgba(250, 248, 242, 0.74);
+  box-shadow: 0 16px 45px rgba(5, 12, 18, 0.16);
+  backdrop-filter: blur(12px);
+}
+
+.challenges-list {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  display: grid;
+  gap: 0.65rem;
+}
+
+.challenges-list li {
+  position: relative;
+  padding-left: 1rem;
+  color: rgba(16, 24, 33, 0.82);
+  font-size: 0.95rem;
+  line-height: 1.4;
+}
+
+.challenges-list li::before {
+  content: "";
+  position: absolute;
+  top: 0.55rem;
+  left: 0;
+  width: 0.4rem;
+  height: 0.4rem;
+  border-radius: 999px;
+  background: #b9473a;
+}
+
+.tool-card-cluster {
+  justify-self: end;
+  width: min(520px, 100%);
+  min-height: 360px;
+  position: relative;
+  transform: translateY(-100px);
+}
+
+.tool-card {
+  position: absolute;
+  left: var(--x, 50%);
+  top: var(--y, 50%);
+  display: flex;
+  align-items: center;
+  gap: 0.62rem;
+  padding: 0.72rem 0.85rem;
+  border: 1px solid rgba(16, 24, 33, 0.12);
+  border-radius: 14px;
+  background: rgba(248, 245, 237, 0.2);
+  box-shadow: 0 14px 28px rgba(5, 12, 18, 0.13);
+  backdrop-filter: blur(8px);
+  opacity: calc(0.12 + (var(--reveal, 1) * 0.88));
+  transform:
+    translate(-50%, -50%)
+    translate(
+      calc(var(--spread-x, 0px) * var(--reveal, 1)),
+      calc(var(--spread-y, 0px) * var(--reveal, 1))
+    )
+    scale(calc(0.9 + (var(--reveal, 1) * 0.1)));
+  transition: opacity 110ms linear, transform 110ms linear;
+}
+
+.tool-card-logo {
+  width: 1.9rem;
+  height: 1.9rem;
+  flex-shrink: 0;
+  display: grid;
+  place-items: center;
+  border-radius: 10px;
+  background: rgba(16, 24, 33, 0.92);
+  color: #f4f1e8;
+  font-size: 1rem;
+}
+
+.tool-card-label {
+  color: rgba(16, 24, 33, 0.9);
+  font-size: 0.87rem;
+  font-weight: 600;
+  line-height: 1.2;
+}
+
 .demo-section {
   min-height: 130vh;
   flex-direction: column;
@@ -257,6 +356,48 @@ h2 {
 
   h2 {
     font-size: clamp(1.85rem, 9.5vw, 3.25rem);
+  }
+
+  .challenges-layout {
+    grid-template-columns: 1fr;
+    gap: 1rem;
+  }
+
+  .tool-card-cluster {
+    min-height: 0;
+    justify-self: stretch;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: center;
+    gap: 0.9rem;
+    position: static;
+    transform: none;
+  }
+
+  .tool-card {
+    position: static;
+    left: auto;
+    top: auto;
+    justify-content: center;
+    padding: 0.2rem;
+    border: none;
+    border-radius: 0;
+    background: transparent;
+    box-shadow: none;
+    backdrop-filter: none;
+    transform: none;
+    opacity: 1;
+  }
+
+  .tool-card-label {
+    display: none;
+  }
+
+  .tool-card-logo {
+    width: 2.2rem;
+    height: 2.2rem;
+    border-radius: 999px;
   }
 
   .demo-placeholder {

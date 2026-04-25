@@ -1,11 +1,42 @@
+import type { CSSProperties } from 'react';
+import type { IconType } from 'react-icons';
+import { FaGitAlt, FaMarkdown } from 'react-icons/fa6';
+import { SiGoogledocs } from 'react-icons/si';
+import { SiConfluence, SiGraphql, SiJira, SiMiro, SiNotion, SiOpenapiinitiative } from 'react-icons/si';
+import { TbApi, TbSchema } from 'react-icons/tb';
 import { useScrollProgress } from './hooks/useScrollProgress';
 import { ParticleScene } from './particle/ParticleScene';
 import { resolveSectionFocus } from './particle/sectionFocus';
+
+type DesignToolCard = {
+  label: string;
+  Icon: IconType;
+  x: number;
+  y: number;
+  spreadX: number;
+  spreadY: number;
+  delayMs: number;
+};
+
+const designToolCards: DesignToolCard[] = [
+  { label: 'Confluence', Icon: SiConfluence, x: 22, y: 19, spreadX: -100, spreadY: -100, delayMs: 100 },
+  { label: 'Git', Icon: FaGitAlt, x: 64, y: 12, spreadX: 40, spreadY: -90, delayMs: 280 },
+  { label: 'Notion', Icon: SiNotion, x: 84, y: 24, spreadX: 80, spreadY: -80, delayMs: 190 },
+  { label: 'Markdown', Icon: FaMarkdown, x: 36, y: 33, spreadX: -34, spreadY: -18, delayMs: 360 },
+  { label: 'Jira', Icon: SiJira, x: 70, y: 40, spreadX: 34, spreadY: -16, delayMs: 240 },
+  { label: 'OpenAPI Spec', Icon: SiOpenapiinitiative, x: 16, y: 48, spreadX: -44, spreadY: 30, delayMs: 420 },
+  { label: 'AsyncAPI Spec', Icon: TbApi, x: 48, y: 58, spreadX: -18, spreadY: 46, delayMs: 150 },
+  { label: 'GraphQL', Icon: SiGraphql, x: 83, y: 61, spreadX: 42, spreadY: 34, delayMs: 320 },
+  { label: 'Miro', Icon: SiMiro, x: 25, y: 76, spreadX: -69, spreadY: 90, delayMs: 260 },
+  { label: 'Diagrams', Icon: TbSchema, x: 67, y: 82, spreadX: 46, spreadY: 48, delayMs: 460 },
+  { label: 'Google Docs', Icon: SiGoogledocs, x: 44, y: 120, spreadX: 20, spreadY: 22, delayMs: 420 },
+];
 
 export default function App() {
   const scrollProgress = useScrollProgress();
   const isMobile = typeof window !== 'undefined' ? window.innerWidth <= 760 : false;
   const sectionFocus = resolveSectionFocus(scrollProgress, isMobile);
+  const sectionOneReveal = Math.max(0, Math.min(1, 1 - Math.abs(scrollProgress - 0.2) / 0.17));
 
   return (
     <main className="page">
@@ -22,18 +53,43 @@ export default function App() {
       </section>
 
       <section className="section tone-dark" data-focus-section>
-        <div className="section-copy">
+        <div className="section-copy section-copy-wide">
           <p className="section-kicker">01 / Design challenges</p>
           <h2>Great designs lose value across tools and formats.</h2>
-          <div>
-            <ul>
-            <li>APIs, events, diagrams, and documents live separately</li>
-            <li>No single view of the system</li>
-            <li>High cognitive overhead to piece things together</li>
-            <li>Hard to understand what’s in flight</li>
-            <li>Impact of changes is unclear</li>
-            <li>Validation happens too late</li>
-            </ul>
+          <div className="challenges-layout">
+            <div className="challenges-panel">
+              <ul className="challenges-list">
+                <li>APIs, events, diagrams, and documents live separately</li>
+                <li>No single view of the system</li>
+                <li>High cognitive overhead to piece things together</li>
+                <li>Hard to understand what’s in flight</li>
+                <li>Impact of changes is unclear</li>
+                <li>Validation happens too late</li>
+              </ul>
+            </div>
+            <div className="tool-card-cluster" aria-label="Design tools and platforms">
+              {designToolCards.map((tool) => (
+                <article
+                  key={tool.label}
+                  className="tool-card"
+                  style={
+                    {
+                      '--x': `${tool.x}%`,
+                      '--y': `${tool.y}%`,
+                      '--spread-x': `${tool.spreadX}px`,
+                      '--spread-y': `${tool.spreadY}px`,
+                      '--delay': `${tool.delayMs}ms`,
+                      '--reveal': sectionOneReveal.toFixed(3),
+                    } as CSSProperties
+                  }
+                >
+                  <span className="tool-card-logo" aria-hidden="true">
+                    <tool.Icon />
+                  </span>
+                  <span className="tool-card-label">{tool.label}</span>
+                </article>
+              ))}
+            </div>
           </div>
         </div>
       </section>

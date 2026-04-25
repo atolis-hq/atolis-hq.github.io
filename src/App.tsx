@@ -4,8 +4,6 @@ import { resolveSectionFocus } from './particle/sectionFocus';
 
 const sections = [
   ['01', 'Traditional design', 'Design is scattered across artefacts.'],
-  ['02', 'Reimagine', 'Bring design into one system.'],
-  ['03', 'Unify', 'See your system as a whole. Trace relationships across APIs, events, and models.'],
   ['04', 'Delivery aware', 'Understand impact before building. Track what’s in flight. Propose changes safely.'],
   ['05', 'AI', 'Built for AI agents. Designed for human control.'],
   ['06', 'Git + YAML', 'Own your model. No lock-in.'],
@@ -21,7 +19,7 @@ export default function App() {
   return (
     <main className="page">
       <ParticleScene focus={sectionFocus} progress={scrollProgress} />
-      <section className="section hero-section tone-dark" aria-labelledby="hero-title">
+      <section className="section hero-section tone-dark" aria-labelledby="hero-title" data-focus-section>
         <div className="section-copy hero-copy">
           <h1 id="hero-title">Software design is fragmented.</h1>
           <h2 className="hero-coral">Corum brings it all together.</h2>
@@ -35,6 +33,7 @@ export default function App() {
       {sections.map(([id, label, heading], index) => (
         <section
           className={`section ${index < 3 ? 'tone-dark' : 'tone-light'} ${label === 'Demo' ? 'demo-section' : ''}`}
+          data-focus-section
           key={id}
         >
           <div className="section-copy">

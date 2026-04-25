@@ -20,8 +20,8 @@ describe('resolveSectionFocus', () => {
   });
 
   it('locks more strongly near the centre of a section than between sections', () => {
-    const locked = resolveSectionFocus(0.1875, false);
-    const shifting = resolveSectionFocus(0.25, false);
+    const locked = resolveSectionFocus(0.25, false);
+    const shifting = resolveSectionFocus(0.333, false);
 
     expect(locked.lock).toBeGreaterThan(shifting.lock);
     expect(shifting.velocity).toBeGreaterThan(locked.velocity);
@@ -35,8 +35,8 @@ describe('resolveSectionFocus', () => {
     expect(mobile.zoom).toBeLessThan(desktop.zoom);
   });
 
-  it('tracks the hero plus the remaining eight content sections', () => {
-    expect(focusPocketCount).toBe(9);
+  it('tracks the hero plus the remaining six content sections', () => {
+    expect(focusPocketCount).toBe(7);
   });
 
   it('keeps subtle scroll movement after the graph stabilises', () => {

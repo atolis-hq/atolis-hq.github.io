@@ -2,6 +2,8 @@ import { describe, expect, it } from 'vitest';
 import {
   createParticleNodes,
   getStageBlend,
+  resolveFormationTimeline,
+  resolveCoralAmount,
   resolveIdleCurrent,
   resolveLabelOpacity,
   resolveParticleTargets
@@ -84,5 +86,41 @@ describe('particleModel', () => {
     expect(stronger).toBeGreaterThan(stiller);
     expect(later).toBeLessThan(stronger);
     expect(later).toBeGreaterThan(0);
+  });
+
+  it('converts formation milestones from section anchors to progress values', () => {
+    const timeline = resolveFormationTimeline(7);
+
+    expect(timeline.clusterStart).toBeCloseTo(1 / 6);
+    expect(timeline.clusterComplete).toBeCloseTo(3 / 6);
+    expect(timeline.edgeStart).toBeCloseTo(2 / 6);
+    expect(timeline.stableComplete).toBe(1);
+    expect(timeline.coralStart).toBe(0.5);
+    expect(timeline.coralComplete).toBe(1);
+  });
+
+  it('uses the section timeline to stabilise nodes earlier when configured by anchors', () => {
+    const nodes = createParticleNodes(12);
+    const timeline = resolveFormationTimeline(7);
+    const targetsAtStableSection = resolveParticleTargets(nodes, timeline.stableComplete, timeline);
+    const firstNode = nodes[0];
+
+    expect(targetsAtStableSection[0].x).toBeCloseTo(firstNode.stableTarget.x);
+    expect(targetsAtStableSection[0].y).toBeCloseTo(firstNode.stableTarget.y);
+  });
+
+  it('stagger-fades coral nodes across the configured coral section interval', () => {
+    const nodes = createParticleNodes(24);
+    const timeline = resolveFormationTimeline(7);
+    const slightlyAfterStart = timeline.coralStart + 0.08;
+    const earlyAmounts = nodes.map((node) => resolveCoralAmount(node, slightlyAfterStart, timeline));
+    const earlyActiveCount = earlyAmounts.filter((amount) => amount > 0).length;
+    const earlyCompleteCount = earlyAmounts.filter((amount) => amount >= 1).length;
+
+    expect(nodes.every((node) => resolveCoralAmount(node, timeline.coralStart - 0.01, timeline) === 0)).toBe(true);
+    expect(earlyActiveCount).toBeGreaterThan(0);
+    expect(earlyActiveCount).toBeLessThan(nodes.length);
+    expect(earlyCompleteCount).toBe(0);
+    expect(nodes.every((node) => resolveCoralAmount(node, timeline.coralComplete + 0.01, timeline) === 1)).toBe(true);
   });
 });

@@ -24,6 +24,20 @@ export type StageBlend = {
   stable: number;
 };
 
+export type FormationTimeline = {
+  clusterStart: number;
+  clusterComplete: number;
+  edgeStart: number;
+  edgeComplete: number;
+  stableStart: number;
+  stableComplete: number;
+  coralStart: number;
+  coralComplete: number;
+};
+
+const coralThresholdFloor = 0.66;
+const coralThresholdRange = 0.26;
+
 const clusterCenters: Vec2[] = [
   { x: -0.52, y: 0.28 },
   { x: 0.18, y: 0.34 },
@@ -58,6 +72,26 @@ function mix(a: number, b: number, t: number): number {
   return a + (b - a) * t;
 }
 
+function sectionProgress(sectionIndex: number, sectionCount: number): number {
+  const maxIndex = Math.max(1, sectionCount - 1);
+  return Math.min(1, Math.max(0, sectionIndex / maxIndex));
+}
+
+export function resolveFormationTimeline(sectionCount: number): FormationTimeline {
+  return {
+    clusterStart: sectionProgress(1, sectionCount),
+    clusterComplete: sectionProgress(3, sectionCount),
+    edgeStart: sectionProgress(1, sectionCount),
+    edgeComplete: sectionProgress(4, sectionCount),
+    stableStart: sectionProgress(2, sectionCount),
+    stableComplete: sectionProgress(sectionCount - 1, sectionCount),
+    coralStart: sectionProgress(1, sectionCount),
+    coralComplete: sectionProgress(sectionCount - 2, sectionCount)
+  };
+}
+
+export const defaultFormationTimeline = resolveFormationTimeline(7);
+
 export function createParticleNodes(count: number): ParticleNode[] {
   const labelCount = Math.round(count * 0.2);
   const labelStep = labelCount > 0 ? Math.max(1, Math.round(count / labelCount)) : count + 1;
@@ -88,7 +122,7 @@ export function createParticleNodes(count: number): ParticleNode[] {
         x: center.x * 0.72 + Math.cos(angle) * radius * 0.62,
         y: center.y * 0.72 + Math.sin(angle) * radius * 0.62
       },
-      coralThreshold: 0.66 + seeded(index, 7) * 0.26
+      coralThreshold: 0.66 + seeded(index, 7) * 0.26      
     };
   });
 }
@@ -106,9 +140,13 @@ export function getStageBlend(progress: number): StageBlend {
   };
 }
 
-export function resolveParticleTargets(nodes: ParticleNode[], progress: number): Vec2[] {
-  const clusterAmount = smoothstep(0.12, 0.56, progress);
-  const stableAmount = smoothstep(0.68, 0.94, progress);
+export function resolveParticleTargets(
+  nodes: ParticleNode[],
+  progress: number,
+  timeline: FormationTimeline = defaultFormationTimeline
+): Vec2[] {
+  const clusterAmount = smoothstep(timeline.clusterStart, timeline.clusterComplete, progress);
+  const stableAmount = smoothstep(timeline.stableStart, timeline.stableComplete, progress);
 
   return nodes.map((node) => {
     const clusterX = mix(node.origin.x, node.clusterTarget.x, clusterAmount);
@@ -121,12 +159,28 @@ export function resolveParticleTargets(nodes: ParticleNode[], progress: number):
   });
 }
 
-export function resolveCoralAmount(node: ParticleNode, progress: number): number {
-  return smoothstep(node.coralThreshold, Math.min(1, node.coralThreshold + 0.12), progress);
+export function resolveCoralAmount(
+  node: ParticleNode,
+  progress: number,
+  timeline: FormationTimeline = defaultFormationTimeline
+): number {
+  const interval = Math.max(0.0001, timeline.coralComplete - timeline.coralStart);
+  const normalizedThreshold = Math.min(
+    1,
+    Math.max(0, (node.coralThreshold - coralThresholdFloor) / coralThresholdRange)
+  );
+  const staggeredThreshold = normalizedThreshold ** 1.25;
+  const nodeWindow = Math.max(0.05, interval * 0.22);
+  const nodeStart = mix(timeline.coralStart, timeline.coralComplete - nodeWindow, staggeredThreshold);
+  const nodeEnd = Math.min(timeline.coralComplete, nodeStart + nodeWindow);
+  return smoothstep(nodeStart, nodeEnd, progress);
 }
 
-export function resolveEdgeOpacity(progress: number): number {
-  return smoothstep(0.42, 0.72, progress) * (0.28 + getStageBlend(progress).stable * 0.42);
+export function resolveEdgeOpacity(
+  progress: number,
+  timeline: FormationTimeline = defaultFormationTimeline
+): number {
+  return smoothstep(timeline.edgeStart, timeline.edgeComplete, progress) * (0.28 + getStageBlend(progress).stable * 0.42);
 }
 
 export function resolveLabelOpacity(node: ParticleNode, progress: number): number {

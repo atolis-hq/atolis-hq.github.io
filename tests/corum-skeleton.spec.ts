@@ -5,6 +5,8 @@ test('renders the Corum particle skeleton and scroll sections', async ({ page })
 
   await expect(page.getByRole('heading', { name: /Software design is fragmented/i })).toBeVisible();
   await expect(page.locator('[data-testid="particle-canvas"]')).toBeVisible();
+  await expect(page.getByText('Bring design into one system.')).toHaveCount(0);
+  await expect(page.getByText('See your system as a whole. Trace relationships across APIs, events, and models.')).toHaveCount(0);
 
   await page.evaluate(() => window.scrollTo(0, document.body.scrollHeight * 0.82));
   await expect(page.getByText('See the system in action.')).toBeVisible();

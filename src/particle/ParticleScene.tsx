@@ -4,11 +4,12 @@ import {
   createParticleNodes,
   resolveCoralAmount,
   resolveEdgeOpacity,
+  resolveFormationTimeline,
   resolveIdleCurrent,
   resolveLabelOpacity,
   resolveParticleTargets
 } from './particleModel';
-import type { SectionFocus } from './sectionFocus';
+import { focusPocketCount, type SectionFocus } from './sectionFocus';
 
 type ParticleSceneProps = {
   focus: SectionFocus;
@@ -75,6 +76,7 @@ export function ParticleScene({ focus, progress }: ParticleSceneProps) {
 
     const nodeCount = window.innerWidth < 760 ? 42 : 72;
     const nodes = createParticleNodes(nodeCount);
+    const formationTimeline = resolveFormationTimeline(focusPocketCount);
     const runtimeNodes: RuntimeNode[] = [];
     const sceneRig = new THREE.Group();
     const nodeGroup = new THREE.Group();
@@ -135,7 +137,7 @@ export function ParticleScene({ focus, progress }: ParticleSceneProps) {
       const elapsed = clock.getElapsedTime();
       const currentProgress = progressRef.current;
       const currentFocus = focusRef.current;
-      const targets = resolveParticleTargets(nodes, currentProgress);
+      const targets = resolveParticleTargets(nodes, currentProgress, formationTimeline);
       const damping = 0.86 - currentProgress * 0.18 - currentFocus.lock * 0.08;
       const idleAmount = resolveIdleCurrent(currentProgress, elapsed) * (1 - currentFocus.lock * 0.5);
       const rigEase = 0.035 + currentFocus.velocity * 0.105;
@@ -179,7 +181,7 @@ export function ParticleScene({ focus, progress }: ParticleSceneProps) {
         runtime.velocity.multiplyScalar(damping);
         runtime.mesh.position.add(runtime.velocity);
         const material = runtime.mesh.material as THREE.MeshBasicMaterial;
-        const coralAmount = resolveCoralAmount(node, currentProgress);
+        const coralAmount = resolveCoralAmount(node, currentProgress, formationTimeline);
         material.color.copy(nodeBase).lerp(nodeCoral, coralAmount);
         material.opacity = 0.54 + currentProgress * 0.34;
         runtime.mesh.scale.setScalar(node.size * (1 + coralAmount * 0.42));
@@ -198,7 +200,7 @@ export function ParticleScene({ focus, progress }: ParticleSceneProps) {
       }
 
       positions.needsUpdate = true;
-      edgeMaterial.opacity = resolveEdgeOpacity(currentProgress);
+      edgeMaterial.opacity = resolveEdgeOpacity(currentProgress, formationTimeline);
 
       renderer.render(scene, camera);
       sceneRig.updateMatrixWorld(true);

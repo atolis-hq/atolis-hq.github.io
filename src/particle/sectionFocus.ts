@@ -15,7 +15,7 @@ type FocusPocket = {
 
 const desktopPockets: FocusPocket[] = [
   { x: 0, y: 0, zoom: 1 },
-  { x: 0.36, y: 0.2, zoom: 1.45 },
+  { x: 0.36, y: 0.2, zoom: 1.65 },
   { x: -0.42, y: 0.1, zoom: 1.22 },
   { x: 0.38, y: -0.06, zoom: 1.19 },
   { x: 1.3, y: 0.4, zoom: 1.3 },

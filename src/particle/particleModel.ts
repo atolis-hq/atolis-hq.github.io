@@ -51,7 +51,7 @@ const nodeLabels = [
   'Domain Model',
   'Read Model',
   'Acceptance Criteria',
-  'One more',
+  'Command',
   'Documentation',
   'User Story',
   'Milestone',

@@ -137,6 +137,10 @@ h2 {
   line-height: 1.04;
 }
 
+.coral {
+  color: #b9473a;
+}
+
 .hero-coral {
   margin-top: 0.35rem;
   max-width: 15ch;

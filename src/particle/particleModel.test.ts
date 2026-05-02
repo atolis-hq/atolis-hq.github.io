@@ -93,10 +93,10 @@ describe('particleModel', () => {
 
     expect(timeline.clusterStart).toBeCloseTo(1 / 6);
     expect(timeline.clusterComplete).toBeCloseTo(3 / 6);
-    expect(timeline.edgeStart).toBeCloseTo(2 / 6);
+    expect(timeline.edgeStart).toBeCloseTo(1 / 6);
     expect(timeline.stableComplete).toBe(1);
-    expect(timeline.coralStart).toBe(0.5);
-    expect(timeline.coralComplete).toBe(1);
+    expect(timeline.coralStart).toBeCloseTo(1 / 6);
+    expect(timeline.coralComplete).toBeCloseTo(5 / 6);
   });
 
   it('uses the section timeline to stabilise nodes earlier when configured by anchors', () => {

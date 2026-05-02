@@ -48,6 +48,7 @@ export function ParticleScene({ focus, progress }: ParticleSceneProps) {
   const hostRef = useRef<HTMLDivElement | null>(null);
   const focusRef = useRef(focus);
   const progressRef = useRef(progress);
+  const [isReady, setIsReady] = useState(false);
   const [labelOverlays, setLabelOverlays] = useState<LabelOverlay[]>([]);
   let isMobileViewport = typeof window !== 'undefined' ? window.innerWidth < 760 : false;
 
@@ -133,6 +134,7 @@ export function ParticleScene({ focus, progress }: ParticleSceneProps) {
     window.addEventListener('resize', resize);
 
     let animationFrame = 0;
+    let hasRenderedOnce = false;
     const clock = new THREE.Clock();
 
     const render = () => {
@@ -205,6 +207,10 @@ export function ParticleScene({ focus, progress }: ParticleSceneProps) {
       edgeMaterial.opacity = resolveEdgeOpacity(currentProgress, formationTimeline);
 
       renderer.render(scene, camera);
+      if (!hasRenderedOnce) {
+        hasRenderedOnce = true;
+        setIsReady(true);
+      }
       sceneRig.updateMatrixWorld(true);
 
       const width = renderer.domElement.clientWidth;
@@ -259,7 +265,10 @@ export function ParticleScene({ focus, progress }: ParticleSceneProps) {
   }, []);
 
   return (
-    <div ref={hostRef} className="particle-scene" aria-hidden="true">
+    <div ref={hostRef} className={`particle-scene ${isReady ? 'is-ready' : 'is-loading'}`} aria-hidden="true">
+      <div className="particle-loader">
+        <span className="particle-loader-mark" />
+      </div>
       <div className="particle-labels">
         {labelOverlays.map((label) => (
           <span

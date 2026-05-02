@@ -61,7 +61,7 @@ export default function App() {
         <div className="section-copy section-copy-wide">
           <p className="section-kicker">01 / Design challenges</p>
           <h2>Great designs lose value across tools and formats.</h2>
-          <div className="challenges-layout">
+          <div className="challenges-layout challenges-column">
             <div className="challenges-panel">
               <ul className="challenges-list">
                 <li>APIs, events, diagrams, and documents live separately</li>
@@ -112,14 +112,16 @@ export default function App() {
             <div className="corum-copy">
               <p className="section-kicker">02 / Introducing Corum</p>
               <h2>Every model.<br/> In one place. <br/><span className="coral">Connected.</span></h2>
-              <div className="corum-panel">
-                <ul className="challenges-list">
+          <div className="challenges-layout">
+            <div className="challenges-panel">
+              <ul className="challenges-list">
                   <li>Every model is represented as structured pseudo-YAML</li>
                   <li>Properties and schema live together in one source of truth</li>
                   <li>Connections between models remain visible at node level</li>
                   <li>Field-level lineage stays explicit without context bloat</li>
                   <li>Design impact can be traced before code is generated</li>
                 </ul>
+              </div>
               </div>
             </div>
           </div>
@@ -130,8 +132,10 @@ export default function App() {
         <div className="section-copy">
           <p className="section-kicker">03 / AI First</p>
           <h2>Designed for humans. <br/><span className="coral">Built for agents.</span></h2>
-          <div>
-            <ul>
+
+          <div className="challenges-layout">
+            <div className="challenges-panel">
+              <ul className="challenges-list">
             <li>Plugs into any AI Agent</li>
             <li>Spec driven development</li>
             <li>Structured models AI can reason about</li>
@@ -140,6 +144,7 @@ export default function App() {
             <li>Humans review, guide, and approve</li>          
             </ul>
           </div>
+          </div>
         </div>
       </section>
 
@@ -147,13 +152,17 @@ export default function App() {
         <div className="section-copy">
           <p className="section-kicker">04 / Evolving design</p>
           <h2>Delivery aware<br/><span className="coral">at every stage.</span></h2>
-          <div>
-            <ul>
+
+          <div className="challenges-layout">
+            <div className="challenges-panel">
+              <ul className="challenges-list">
             <li>Designs dont have a single version.</li>
             <li>Track what’s in flight</li>
             <li>Understand the impact of changes</li>
             <li>Validate design before it becomes code</li>
+            <li>Branch based storage model and multi branch overlay</li>
             </ul>
+          </div>
           </div>
         </div>
       </section>
@@ -174,8 +183,10 @@ export default function App() {
         <div className="section-copy">
         <p className="section-kicker">04 / Tools and Customisation</p>
         <h2>Cutomise Corum with <span className="coral">Plugins</span></h2>
-        <div>
-            <ul>
+    
+          <div className="challenges-layout">
+            <div className="challenges-panel">
+              <ul className="challenges-list">
             <li>Template packs and plugins</li>
             <li>Model anything</li>
             <li>MCP tooling</li>
@@ -183,6 +194,7 @@ export default function App() {
             <li>Designs live in your Git repository</li>
             <li>Zero infrastructure required</li>
             </ul>
+          </div>
           </div>
         </div>
       </section>

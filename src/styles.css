@@ -139,7 +139,6 @@ select {
   min-height: 120vh;
   align-items: flex-start;
   justify-content: flex-start;
-  padding-left: clamp(1rem, 2vw, 2rem);
   padding-top: 18vh;
   scroll-snap-align: start;
 }
@@ -240,9 +239,12 @@ h2 {
 .challenges-layout {
   margin-top: 2rem;
   display: grid;
-  grid-template-columns: minmax(280px, 0.9fr) minmax(420px, 1.1fr);
   gap: clamp(1.2rem, 3vw, 2rem);
   align-items: start;
+}
+
+.challenges-column{  
+  grid-template-columns: minmax(280px, 0.9fr) minmax(420px, 1.1fr);
 }
 
 .challenges-panel {

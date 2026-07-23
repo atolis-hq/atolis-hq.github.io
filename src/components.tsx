@@ -46,35 +46,62 @@ export function CommandBlock({ command, accent }: { command: string; accent: str
 export function ProductVisual({ product }: { product: Product }) {
   if (product.slug === 'corum') {
     return (
-      <div className="visual visual-corum" aria-label="Corum design graph illustration">
-        <div className="graph-line graph-line-a" />
-        <div className="graph-line graph-line-b" />
-        <div className="graph-line graph-line-c" />
-        <div className="graph-node graph-node-large">API</div>
-        <div className="graph-node graph-node-event">Event</div>
-        <div className="graph-node graph-node-schema">Schema</div>
-        <div className="graph-node graph-node-domain">Domain</div>
-        <div className="schema-card">
-          <span>orders.Schema.Payment</span>
-          <code>amount -&gt; settlement.total</code>
-          <code>status -&gt; lifecycle.state</code>
+      <div className="visual product-surface visual-corum" aria-label="Corum architecture explorer mockup">
+        <div className="surface-topbar">
+          <span>Architecture graph</span>
+          <span>main</span>
+        </div>
+        <div className="corum-surface-grid">
+          <div className="surface-sidebar">
+            <span className="surface-label">Components</span>
+            <b>orders</b>
+            <b>payments</b>
+            <b>fulfillment</b>
+          </div>
+          <div className="surface-canvas">
+            <div className="corum-flow">
+              <span className="surface-node">POST: /orders</span>
+              <span className="flow-arrow" aria-hidden="true">↓</span>
+              <span className="surface-node">Create Order</span>
+              <span className="flow-arrow" aria-hidden="true">↓</span>
+              <span className="surface-node">Order Created</span>
+            </div>
+          </div>
+          <div className="surface-detail">
+            <span className="surface-label">Lineage</span>
+            <b>Order Created</b>
+            <code>orderId -&gt; Order.id</code>
+            <code>status -&gt; Order.state</code>
+          </div>
         </div>
       </div>
     );
   }
 
   return (
-    <div className="visual visual-wake" aria-label="Wake control-plane workflow illustration">
-      <div className="flow-rail" />
-      {['Issue', 'Policy', 'Agent', 'Review', 'PR'].map((label, index) => (
-        <div className="flow-step" key={label} style={{ '--i': index } as React.CSSProperties}>
-          <span>{label}</span>
+    <div className="visual product-surface visual-wake" aria-label="Wake control-plane run mockup">
+      <div className="surface-topbar">
+        <span>Run queue</span>
+        <span>live</span>
+      </div>
+      <div className="wake-surface-grid">
+        <div className="wake-ticket">
+          <span className="surface-label">GitHub Issue</span>
+          <b>#482 Add import guardrails</b>
+          <small>assigned to wake</small>
         </div>
-      ))}
-      <div className="event-log">
-        <code>stage: implement</code>
-        <code>runner: codex</code>
-        <code>status: awaiting-review</code>
+        <div className="wake-lifecycle">
+          <span className="surface-label">Lifecycle</span>
+          {['refine', 'plan', 'implement', 'review'].map((stage) => (
+            <span className="wake-stage" key={stage}>{stage}</span>
+          ))}
+        </div>
+        <div className="wake-run">
+          <span className="surface-label">Agent run</span>
+          <b>codex</b>
+          <code>workspace ready</code>
+          <code>PR ready</code>
+        </div>
       </div>
     </div>
   );

@@ -333,133 +333,173 @@ p {
   mask-image: linear-gradient(180deg, rgba(0, 0, 0, 0.9), transparent);
 }
 
-.graph-node,
-.flow-step,
-.schema-card,
-.event-log {
-  position: absolute;
+.product-surface {
+  display: grid;
+  grid-template-rows: 2.7rem 1fr;
+  padding: 0;
+  color: #f7f3ec;
+}
+
+.surface-topbar {
+  position: relative;
   z-index: 1;
-  border: 1px solid rgba(255, 255, 255, 0.14);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 0 1rem;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  background: rgba(255, 255, 255, 0.06);
+  font-size: 0.76rem;
+  font-weight: 760;
+  letter-spacing: 0.04em;
+}
+
+.surface-topbar span:last-child {
+  color: rgba(247, 243, 236, 0.56);
+  font-size: 0.68rem;
+  text-transform: uppercase;
+}
+
+.corum-surface-grid,
+.wake-surface-grid {
+  position: relative;
+  z-index: 1;
+  min-height: 0;
+  padding: 0.8rem;
+}
+
+.corum-surface-grid {
+  display: grid;
+  grid-template-columns: 7.4rem minmax(0, 1fr) 9rem;
+  gap: 0.55rem;
+}
+
+.wake-surface-grid {
+  display: grid;
+  grid-template-columns: 0.95fr 0.85fr;
+  grid-template-rows: 1fr 1fr;
+  gap: 0.55rem;
+}
+
+.surface-sidebar,
+.surface-detail,
+.wake-ticket,
+.wake-lifecycle,
+.wake-run {
+  border: 1px solid rgba(255, 255, 255, 0.12);
   border-radius: 8px;
   background: rgba(255, 253, 248, 0.08);
+  padding: 0.75rem;
+}
+
+.surface-sidebar,
+.surface-detail,
+.wake-ticket,
+.wake-run {
+  display: grid;
+  align-content: start;
+  gap: 0.48rem;
+}
+
+.surface-sidebar b,
+.surface-detail b,
+.wake-ticket b,
+.wake-run b {
   color: #fffdf8;
-  backdrop-filter: blur(10px);
+  font-size: 0.82rem;
+  line-height: 1.2;
 }
 
-.graph-node {
+.surface-label {
+  color: rgba(247, 243, 236, 0.54);
+  font-size: 0.64rem;
+  font-weight: 760;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+.surface-detail code,
+.wake-run code {
+  color: rgba(247, 243, 236, 0.68);
+  font-family: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, monospace;
+  font-size: 0.66rem;
+  line-height: 1.35;
+}
+
+.surface-canvas {
+  position: relative;
+  overflow: hidden;
+  border: 1px solid rgba(232, 97, 74, 0.18);
+  border-radius: 8px;
+  background: rgba(232, 97, 74, 0.08);
+}
+
+.corum-flow {
+  position: relative;
+  z-index: 1;
+  min-height: 100%;
   display: grid;
-  place-items: center;
-  width: 6.1rem;
-  height: 3rem;
-  font-weight: 780;
+  align-content: center;
+  justify-items: center;
+  gap: 0.45rem;
+  padding: 0.9rem;
 }
 
-.graph-node-large {
-  top: 3.2rem;
-  left: 2rem;
-  border-color: rgba(232, 97, 74, 0.64);
-  background: rgba(232, 97, 74, 0.18);
-}
-
-.graph-node-event {
-  top: 5.8rem;
-  right: 2.1rem;
-}
-
-.graph-node-schema {
-  top: 10rem;
-  left: 5.4rem;
-}
-
-.graph-node-domain {
-  top: 10.8rem;
-  right: 3.4rem;
-}
-
-.graph-line {
-  position: absolute;
-  z-index: 0;
-  height: 2px;
-  background: linear-gradient(90deg, rgba(232, 97, 74, 0.2), rgba(232, 97, 74, 0.9));
-  transform-origin: left center;
-}
-
-.graph-line-a {
-  top: 6.2rem;
-  left: 7.4rem;
-  width: 13rem;
-  transform: rotate(8deg);
-}
-
-.graph-line-b {
-  top: 8.2rem;
-  left: 5.5rem;
-  width: 9.8rem;
-  transform: rotate(69deg);
-}
-
-.graph-line-c {
-  right: 5.8rem;
-  bottom: 6.4rem;
-  width: 10.8rem;
-  transform: rotate(-151deg);
-}
-
-.schema-card,
-.event-log {
-  display: grid;
-  gap: 0.42rem;
-  padding: 0.85rem;
-}
-
-.schema-card {
-  left: 1.2rem;
-  right: 1.2rem;
-  bottom: 1rem;
-}
-
-.schema-card span {
-  color: #f4a58a;
+.surface-node {
+  z-index: 2;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: min(100%, 10.5rem);
+  min-height: 2.35rem;
+  padding: 0 0.55rem;
+  border: 1px solid rgba(244, 165, 138, 0.36);
+  border-radius: 7px;
+  background: #241c1b;
+  color: #f9d3c5;
+  font-size: 0.68rem;
   font-weight: 760;
 }
 
-.schema-card code,
-.event-log code {
-  color: rgba(255, 253, 248, 0.76);
-  font-family: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, monospace;
-  font-size: 0.78rem;
+.flow-arrow {
+  color: #e8614a;
+  font-size: 1.05rem;
+  font-weight: 820;
+  line-height: 1;
 }
 
-.flow-rail {
-  position: absolute;
-  top: 6.5rem;
-  left: 2.2rem;
-  right: 2.2rem;
-  height: 2px;
-  background: linear-gradient(90deg, rgba(45, 212, 191, 0.18), rgba(45, 212, 191, 0.92));
+.wake-ticket {
+  border-color: rgba(45, 212, 191, 0.22);
+  background: rgba(45, 212, 191, 0.08);
 }
 
-.flow-step {
-  top: 4.8rem;
-  left: calc(7% + var(--i) * 21%);
-  width: 4.6rem;
-  height: 3.4rem;
+.wake-ticket small {
+  color: rgba(247, 243, 236, 0.58);
+}
+
+.wake-lifecycle {
+  grid-row: span 2;
   display: grid;
-  place-items: center;
-  border-color: rgba(45, 212, 191, 0.38);
+  align-content: start;
+  gap: 0.45rem;
+  border-color: rgba(45, 212, 191, 0.2);
 }
 
-.flow-step span {
-  font-size: 0.82rem;
+.wake-stage {
+  display: block;
+  padding: 0.48rem 0.55rem;
+  border: 1px solid rgba(45, 212, 191, 0.2);
+  border-radius: 7px;
+  background: rgba(45, 212, 191, 0.08);
+  color: rgba(247, 243, 236, 0.82);
+  font-size: 0.72rem;
   font-weight: 780;
 }
 
-.event-log {
-  left: 1.3rem;
-  right: 1.3rem;
-  bottom: 1.4rem;
-  border-color: rgba(45, 212, 191, 0.34);
-  background: rgba(45, 212, 191, 0.1);
+.wake-run {
+  border-color: rgba(45, 212, 191, 0.28);
+  background: rgba(45, 212, 191, 0.11);
 }
 
 .future-products {
@@ -640,45 +680,29 @@ p {
   }
 
   .visual {
-    min-height: 350px;
+    min-height: 420px;
   }
 
-  .flow-step {
-    left: 1.2rem;
-    top: calc(1rem + var(--i) * 2.45rem);
-    width: 5.7rem;
-    height: 2.2rem;
+  .corum-surface-grid,
+  .wake-surface-grid {
+    grid-template-columns: 1fr;
   }
 
-  .flow-rail {
-    top: 2rem;
-    left: 4rem;
-    bottom: 8.8rem;
-    width: 2px;
-    height: auto;
+  .wake-surface-grid {
+    grid-template-rows: auto;
   }
 
-  .event-log {
-    left: 1rem;
-    right: 1rem;
+  .wake-lifecycle {
+    grid-row: auto;
   }
 
-  .graph-node {
-    width: 5.1rem;
+  .surface-sidebar,
+  .surface-detail {
+    min-height: 0;
   }
 
-  .graph-node-event {
-    right: 1rem;
-  }
-
-  .graph-node-schema {
-    top: 9.1rem;
-    left: 1rem;
-  }
-
-  .graph-node-domain {
-    top: 9.7rem;
-    right: 1rem;
+  .surface-canvas {
+    min-height: 11.5rem;
   }
 
   .site-footer {

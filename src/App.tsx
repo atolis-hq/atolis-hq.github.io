@@ -1,203 +1,170 @@
-import type { CSSProperties } from 'react';
-import type { IconType } from 'react-icons';
-import { FaGitAlt, FaMarkdown } from 'react-icons/fa6';
-import { SiGoogledocs } from 'react-icons/si';
-import { SiConfluence, SiGraphql, SiJira, SiMiro, SiNotion, SiOpenapiinitiative } from 'react-icons/si';
-import { TbApi, TbSchema } from 'react-icons/tb';
-import { CorumModelWindow } from './components/CorumModelWindow';
-import { useScrollProgress } from './hooks/useScrollProgress';
-import { ParticleScene } from './particle/ParticleScene';
-import { resolveSectionFocus } from './particle/sectionFocus';
+import { ExternalLink } from 'lucide-react';
+import { useEffect, useState } from 'react';
+import { CommandBlock, ProductCard, ProductVisual } from './components';
+import { getProduct, products } from './products';
+import { normalizeHashPath } from './routing';
 
-type DesignToolCard = {
-  label: string;
-  Icon: IconType;
-  x: number;
-  y: number;
-  spreadX: number;
-  spreadY: number;
-  delayMs: number;
-};
+function useHashPath() {
+  const [path, setPath] = useState(() => normalizeHashPath(window.location.hash));
 
-const designToolCards: DesignToolCard[] = [
-  { label: 'Confluence', Icon: SiConfluence, x: 22, y: 19, spreadX: -100, spreadY: -100, delayMs: 100 },
-  { label: 'Git', Icon: FaGitAlt, x: 64, y: 12, spreadX: 40, spreadY: -90, delayMs: 280 },
-  { label: 'Notion', Icon: SiNotion, x: 84, y: 24, spreadX: 80, spreadY: -80, delayMs: 190 },
-  { label: 'Markdown', Icon: FaMarkdown, x: 36, y: 33, spreadX: -34, spreadY: -18, delayMs: 360 },
-  { label: 'Jira', Icon: SiJira, x: 70, y: 40, spreadX: 34, spreadY: -16, delayMs: 240 },
-  { label: 'OpenAPI Spec', Icon: SiOpenapiinitiative, x: 16, y: 48, spreadX: -44, spreadY: 30, delayMs: 420 },
-  { label: 'AsyncAPI Spec', Icon: TbApi, x: 48, y: 58, spreadX: -18, spreadY: 46, delayMs: 150 },
-  { label: 'GraphQL', Icon: SiGraphql, x: 83, y: 61, spreadX: 42, spreadY: 34, delayMs: 320 },
-  { label: 'Miro', Icon: SiMiro, x: 25, y: 76, spreadX: -69, spreadY: 90, delayMs: 260 },
-  { label: 'Diagrams', Icon: TbSchema, x: 67, y: 82, spreadX: 46, spreadY: 48, delayMs: 460 },
-  { label: 'Google Docs', Icon: SiGoogledocs, x: 44, y: 120, spreadX: 20, spreadY: 22, delayMs: 420 },
-];
+  useEffect(() => {
+    const onHashChange = () => setPath(normalizeHashPath(window.location.hash));
+    window.addEventListener('hashchange', onHashChange);
+    return () => window.removeEventListener('hashchange', onHashChange);
+  }, []);
 
-export default function App() {
-  const scrollProgress = useScrollProgress();
-  const isMobile = typeof window !== 'undefined' ? window.innerWidth <= 760 : false;
-  const sectionFocus = resolveSectionFocus(scrollProgress, isMobile);
-  const sectionOneReveal = Math.max(0, Math.min(1, 1 - Math.abs(scrollProgress - 0.2) / 0.17));
-  const sectionTwoReveal = Math.max(0, Math.min(1, 1 - Math.abs(scrollProgress - 0.38) / 0.19));
-  const sectionTwoDelta = scrollProgress - 0.38;
-  const sectionTwoParallax =
-    -Math.sign(sectionTwoDelta) * Math.pow(Math.min(Math.abs(sectionTwoDelta) / 0.16, 1), 1.05) * 560;
+  return path;
+}
+
+function Shell({ children }: { children: React.ReactNode }) {
+  return (
+    <div className="site-shell">
+      <header className="site-header">
+        <a className="brand" href="#/" aria-label="Atolis product homepage">
+          <span className="brand-mark">A</span>
+          <span>Atolis</span>
+        </a>
+        <nav aria-label="Primary navigation">
+          <a href="#/corum">Corum</a>
+          <a href="#/wake">Wake</a>
+          <a href="https://github.com/atolis-hq">
+            GitHub
+            <ExternalLink size={14} />
+          </a>
+        </nav>
+      </header>
+      {children}
+      <footer className="site-footer">
+        <span>Open-source tools from Atolis.</span>
+        <a href="https://github.com/atolis-hq">github.com/atolis-hq</a>
+      </footer>
+    </div>
+  );
+}
+
+function HomePage() {
+  return (
+    <Shell>
+      <main>
+        <section className="hero">
+          <p className="eyebrow">Atolis OSS</p>
+          <h1>Open-source tools for agent-ready software design and delivery.</h1>
+          <p className="hero-copy">
+            Corum helps teams model system architecture as a structured graph. Wake coordinates autonomous engineering
+            work through durable, inspectable workflows.
+          </p>
+          <div className="hero-actions">
+            <a className="button button-primary" href="#/corum">
+              Explore Corum
+            </a>
+            <a className="button button-secondary" href="#/wake">
+              Explore Wake
+            </a>
+          </div>
+        </section>
+
+        <section className="product-grid" aria-label="Featured products">
+          {products.map((product) => (
+            <ProductCard key={product.slug} product={product} />
+          ))}
+        </section>
+
+        <section className="future-products">
+          <p className="eyebrow">Built to expand</p>
+          <h2>A product surface for the next Atolis tools.</h2>
+          <p>
+            This landing page is structured as a product index. Future projects can join the same metadata model,
+            navigation, and page pattern without turning the homepage into a long brochure.
+          </p>
+        </section>
+      </main>
+    </Shell>
+  );
+}
+
+function ProductPage({ slug }: { slug: string }) {
+  const product = getProduct(slug);
+
+  if (!product) {
+    return (
+      <Shell>
+        <main className="not-found">
+          <h1>Product not found.</h1>
+          <a className="button button-primary" href="#/">
+            Back to products
+          </a>
+        </main>
+      </Shell>
+    );
+  }
+
+  const sibling = products.find((candidate) => candidate.slug !== product.slug);
 
   return (
-    <main className="page">
-      <ParticleScene focus={sectionFocus} progress={scrollProgress} />
-      <section className="section hero-section tone-dark" aria-labelledby="hero-title" data-focus-section>
-        <div className="section-copy hero-copy">
-          <h1 id="hero-title">Software design is fragmented.</h1>
-          <h2 className="hero-coral">Corum brings it all together.</h2>
-          <p className="hero-subtitle">
-            Replace scattered artefacts with a structured model.<br /> One that AI can build from and humans can trust.
-          </p>
-          <p className="hero-support">Open Source. Git-native. Model anything.</p>
-        </div>
-      </section>
-
-      <section className="section tone-dark" data-focus-section>
-        <div className="section-copy section-copy-wide">
-          <p className="section-kicker">01 / Design challenges</p>
-          <h2>Great designs lose value across tools and formats.</h2>
-          <div className="challenges-layout challenges-column">
-            <div className="challenges-panel">
-              <ul className="challenges-list">
-                <li>APIs, events, diagrams, and documents live separately</li>
-                <li>No single view of the system</li>
-                <li>High cognitive overhead to piece things together</li>
-                <li>Hard to understand what’s in flight</li>
-                <li>Impact of changes is unclear</li>
-                <li>Validation happens too late</li>
-              </ul>
-            </div>
-            <div className="tool-card-cluster" aria-label="Design tools and platforms">
-              {designToolCards.map((tool) => (
-                <article
-                  key={tool.label}
-                  className="tool-card"
-                  style={
-                    {
-                      '--x': `${tool.x}%`,
-                      '--y': `${tool.y}%`,
-                      '--spread-x': `${tool.spreadX}px`,
-                      '--spread-y': `${tool.spreadY}px`,
-                      '--delay': `${tool.delayMs}ms`,
-                      '--reveal': sectionOneReveal.toFixed(3),
-                    } as CSSProperties
-                  }
-                >
-                  <span className="tool-card-logo" aria-hidden="true">
-                    <tool.Icon />
-                  </span>
-                  <span className="tool-card-label">{tool.label}</span>
-                </article>
-              ))}
+    <Shell>
+      <main className="product-page" style={{ '--accent': product.accent } as React.CSSProperties}>
+        <section className="product-hero">
+          <div>
+            <img src={product.logo} alt="" className="product-logo product-logo-large" />
+            <p className="eyebrow">{product.name}</p>
+            <h1>{product.tagline}</h1>
+            <p>{product.summary}</p>
+            <CommandBlock command={product.installCommand} accent={product.accent} />
+            <div className="button-row">
+              <a className="button button-primary" href={product.githubUrl}>
+                GitHub
+                <ExternalLink size={15} />
+              </a>
+              <a className="button button-secondary" href={product.npmUrl}>
+                npm
+                <ExternalLink size={15} />
+              </a>
+              <a className="button button-secondary" href={product.docsUrl}>
+                Docs
+                <ExternalLink size={15} />
+              </a>
             </div>
           </div>
-        </div>
-      </section>
+          <ProductVisual product={product} />
+        </section>
 
-      <section className="section tone-dark" data-focus-section>
-        <div className="section-copy section-copy-wide">
-          <div className="corum-layout">
-            <div className="corum-window-wrap">
-              <CorumModelWindow reveal={sectionTwoReveal} parallax={sectionTwoParallax} />
-              <p className="corum-window-note">
-                Illustrative pseudo-YAML for concept preview, not the exact production source format.
-              </p>
+        <section className="capabilities">
+          <p className="eyebrow">What it does</p>
+          <div className="capability-grid">
+            {product.capabilities.map((capability) => (
+              <article key={capability.title}>
+                <h2>{capability.title}</h2>
+                <p>{capability.body}</p>
+              </article>
+            ))}
+          </div>
+        </section>
+
+        <section className="product-next">
+          <div>
+            <p className="eyebrow">Start here</p>
+            <h2>Install the package, then keep the README open.</h2>
+          </div>
+          <div>
+            <CommandBlock command={product.installCommand} accent={product.accent} />
+            <div className="button-row">
+              <a className="button button-primary" href={product.githubUrl}>
+                Open repository
+              </a>
+              {sibling ? (
+                <a className="button button-secondary" href={`#/${sibling.slug}`}>
+                  View {sibling.name}
+                </a>
+              ) : null}
             </div>
-
-            <div className="corum-copy">
-              <p className="section-kicker">02 / Introducing Corum</p>
-              <h2>Every model.<br/> In one place. <br/><span className="coral">Connected.</span></h2>
-          <div className="challenges-layout">
-            <div className="challenges-panel">
-              <ul className="challenges-list">
-                  <li>Every model is represented as structured pseudo-YAML</li>
-                  <li>Properties and schema live together in one source of truth</li>
-                  <li>Connections between models remain visible at node level</li>
-                  <li>Field-level lineage stays explicit without context bloat</li>
-                  <li>Design impact can be traced before code is generated</li>
-                </ul>
-              </div>
-              </div>
-            </div>
           </div>
-        </div>
-      </section>
-
-      <section className="section tone-dark" data-focus-section>
-        <div className="section-copy">
-          <p className="section-kicker">03 / AI First</p>
-          <h2>Designed for humans. <br/><span className="coral">Built for agents.</span></h2>
-
-          <div className="challenges-layout">
-            <div className="challenges-panel">
-              <ul className="challenges-list">
-            <li>Plugs into any AI Agent</li>
-            <li>Spec driven development</li>
-            <li>Structured models AI can reason about</li>
-            <li>Explicit relationships without context bloat</li>
-            <li>Agents can inspect and update the system</li>
-            <li>Humans review, guide, and approve</li>          
-            </ul>
-          </div>
-          </div>
-        </div>
-      </section>
-
-      <section className="section tone-dark" data-focus-section>
-        <div className="section-copy">
-          <p className="section-kicker">04 / Evolving design</p>
-          <h2>Delivery aware<br/><span className="coral">at every stage.</span></h2>
-
-          <div className="challenges-layout">
-            <div className="challenges-panel">
-              <ul className="challenges-list">
-            <li>Designs dont have a single version.</li>
-            <li>Track what’s in flight</li>
-            <li>Understand the impact of changes</li>
-            <li>Validate design before it becomes code</li>
-            <li>Branch based storage model and multi branch overlay</li>
-            </ul>
-          </div>
-          </div>
-        </div>
-      </section>
-
-      <section className="section tone-dark demo-section" data-focus-section>
-        <div className="section-copy">
-          <p className="section-kicker">05 / Demo</p>
-          <h2>Works the way <span className="coral">your team works.</span></h2>
-        </div>
-        <div className="demo-placeholder" aria-label="Demo placeholder">
-          <div className="demo-sidebar" />
-          <div className="demo-graph">Stable system placeholder</div>
-          <div className="demo-panel" />
-        </div>
-      </section>
-
-      <section className="section tone-light" data-focus-section>
-        <div className="section-copy">
-        <p className="section-kicker">04 / Tools and Customisation</p>
-        <h2>Cutomise Corum with <span className="coral">Plugins</span></h2>
-    
-          <div className="challenges-layout">
-            <div className="challenges-panel">
-              <ul className="challenges-list">
-            <li>Template packs and plugins</li>
-            <li>Model anything</li>
-            <li>MCP tooling</li>
-            <li>Import existing models and specifications</li>
-            <li>Designs live in your Git repository</li>
-            <li>Zero infrastructure required</li>
-            </ul>
-          </div>
-          </div>
-        </div>
-      </section>
-    </main>
+        </section>
+      </main>
+    </Shell>
   );
+}
+
+export default function App() {
+  const path = useHashPath();
+  return path ? <ProductPage slug={path} /> : <HomePage />;
 }

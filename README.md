@@ -1,66 +1,34 @@
-# Corum Landing Skeleton
+# Atolis Product Landing
 
-React web app built with Vite, TypeScript, and Three.js.
+Static Vite/React site for the Atolis OSS product surface.
 
-## Prerequisites
+## Local Development
 
-- Node.js 20 or newer
-- npm
-
-## Install
-
-```bash
+```sh
 npm install
-```
-
-## Run Locally
-
-Start the Vite development server:
-
-```bash
 npm run dev
 ```
 
-The app runs at:
-
-```text
-http://127.0.0.1:5173
-```
-
-If Vite chooses a different port because `5173` is already in use, use the URL printed in the terminal.
-
 ## Build
 
-Create a production build in `dist/`:
-
-```bash
+```sh
 npm run build
 ```
 
-This runs TypeScript project checks first, then builds the Vite app.
+The static output is written to `dist/`.
 
-## Deployment
+## Routing
 
-Pushes to `main` publish the production build to GitHub Pages:
+The app uses hash routes:
 
-```text
-https://atolis-hq.github.io/
-```
+- `#/`
+- `#/corum`
+- `#/wake`
 
-Deployment is handled by `.github/workflows/deploy-pages.yml`, which installs dependencies, runs unit tests, builds the app, and uploads `dist/` as the Pages artifact.
+This keeps product links compatible with GitHub Pages without requiring a custom single-page app fallback.
 
-## Tests
+## GitHub Pages
 
-Run unit tests:
+The app is ready to deploy as static files. A Pages workflow can run `npm ci`, `npm run build`, and upload `dist/`.
 
-```bash
-npm test
-```
-
-Run Playwright end-to-end tests:
-
-```bash
-npm run test:e2e
-```
-
-The Playwright config starts the dev server automatically at `http://127.0.0.1:5173` when needed.
+If this replaces the existing `web` deployment, adapt the current Pages workflow to use `landing` as the working directory.

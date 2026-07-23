@@ -19,13 +19,13 @@ The static output is written to `dist/`.
 
 ## Routing
 
-The app uses hash routes:
+The app uses clean static routes:
 
-- `#/`
-- `#/corum`
-- `#/wake`
+- `/`
+- `/corum`
+- `/wake`
 
-This keeps product links compatible with GitHub Pages without requiring a custom single-page app fallback.
+The build copies `dist/index.html` into `dist/corum/index.html` and `dist/wake/index.html`, so GitHub Pages can serve product pages directly without hash fragments.
 
 ## GitHub Pages
 

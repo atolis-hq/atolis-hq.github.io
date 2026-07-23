@@ -84,8 +84,10 @@ export function ProductCard({ product }: { product: Product }) {
   return (
     <article className="product-card" style={{ '--accent': product.accent } as React.CSSProperties}>
       <div className="product-card-copy">
-        <img src={product.logo} alt="" className="product-logo" />
-        <p className="eyebrow">{product.name}</p>
+        <div className="product-identity">
+          <img src={product.logo} alt="" className="product-identity-logo" />
+          <p className="product-identity-name">{product.name}</p>
+        </div>
         <h2>{product.tagline}</h2>
         <p>{product.summary}</p>
         <ul>
@@ -95,7 +97,7 @@ export function ProductCard({ product }: { product: Product }) {
         </ul>
         <CommandBlock command={product.installCommand} accent={product.accent} />
         <div className="button-row">
-          <a className="button button-primary" href={`#/${product.slug}`}>
+          <a className="button button-primary" href={`/${product.slug}`}>
             Explore {product.name}
             <ArrowRight size={16} />
           </a>

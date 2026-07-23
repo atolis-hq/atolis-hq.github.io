@@ -1,16 +1,17 @@
 import { ExternalLink } from 'lucide-react';
 import { useEffect, useState } from 'react';
 import { CommandBlock, ProductCard, ProductVisual } from './components';
+import atolisLogo from './assets/atolis-logo.svg';
 import { getProduct, products } from './products';
-import { normalizeHashPath } from './routing';
+import { normalizePathRoute } from './routing';
 
-function useHashPath() {
-  const [path, setPath] = useState(() => normalizeHashPath(window.location.hash));
+function usePathRoute() {
+  const [path, setPath] = useState(() => normalizePathRoute(window.location.pathname));
 
   useEffect(() => {
-    const onHashChange = () => setPath(normalizeHashPath(window.location.hash));
-    window.addEventListener('hashchange', onHashChange);
-    return () => window.removeEventListener('hashchange', onHashChange);
+    const onPopState = () => setPath(normalizePathRoute(window.location.pathname));
+    window.addEventListener('popstate', onPopState);
+    return () => window.removeEventListener('popstate', onPopState);
   }, []);
 
   return path;
@@ -18,27 +19,33 @@ function useHashPath() {
 
 function Shell({ children }: { children: React.ReactNode }) {
   return (
-    <div className="site-shell">
+    <>
       <header className="site-header">
-        <a className="brand" href="#/" aria-label="Atolis product homepage">
-          <span className="brand-mark">A</span>
-          <span>Atolis</span>
-        </a>
-        <nav aria-label="Primary navigation">
-          <a href="#/corum">Corum</a>
-          <a href="#/wake">Wake</a>
-          <a href="https://github.com/atolis-hq">
-            GitHub
-            <ExternalLink size={14} />
+        <div className="site-header-inner">
+          <a className="brand" href="/" aria-label="Atolis product homepage">
+            <span className="brand-mark">
+              <img src={atolisLogo} alt="" />
+            </span>
+            <span>atolis-hq</span>
           </a>
-        </nav>
+          <nav aria-label="Primary navigation">
+            <a href="/corum">Corum</a>
+            <a href="/wake">Wake</a>
+            <a href="https://github.com/atolis-hq">
+              GitHub
+              <ExternalLink size={14} />
+            </a>
+          </nav>
+        </div>
       </header>
-      {children}
-      <footer className="site-footer">
-        <span>Open-source tools from Atolis.</span>
-        <a href="https://github.com/atolis-hq">github.com/atolis-hq</a>
-      </footer>
-    </div>
+      <div className="site-shell">
+        {children}
+        <footer className="site-footer">
+          <span>Open-source tools from Atolis.</span>
+          <a href="https://github.com/atolis-hq">github.com/atolis-hq</a>
+        </footer>
+      </div>
+    </>
   );
 }
 
@@ -54,10 +61,10 @@ function HomePage() {
             work through durable, inspectable workflows.
           </p>
           <div className="hero-actions">
-            <a className="button button-primary" href="#/corum">
+            <a className="button button-primary" href="/corum">
               Explore Corum
             </a>
-            <a className="button button-secondary" href="#/wake">
+            <a className="button button-secondary" href="/wake">
               Explore Wake
             </a>
           </div>
@@ -69,14 +76,7 @@ function HomePage() {
           ))}
         </section>
 
-        <section className="future-products">
-          <p className="eyebrow">Built to expand</p>
-          <h2>A product surface for the next Atolis tools.</h2>
-          <p>
-            This landing page is structured as a product index. Future projects can join the same metadata model,
-            navigation, and page pattern without turning the homepage into a long brochure.
-          </p>
-        </section>
+      
       </main>
     </Shell>
   );
@@ -90,7 +90,7 @@ function ProductPage({ slug }: { slug: string }) {
       <Shell>
         <main className="not-found">
           <h1>Product not found.</h1>
-          <a className="button button-primary" href="#/">
+          <a className="button button-primary" href="/">
             Back to products
           </a>
         </main>
@@ -102,11 +102,13 @@ function ProductPage({ slug }: { slug: string }) {
 
   return (
     <Shell>
-      <main className="product-page" style={{ '--accent': product.accent } as React.CSSProperties}>
+      <main className={`product-page product-page-${product.slug}`} style={{ '--accent': product.accent } as React.CSSProperties}>
         <section className="product-hero">
           <div>
-            <img src={product.logo} alt="" className="product-logo product-logo-large" />
-            <p className="eyebrow">{product.name}</p>
+            <div className="product-identity">
+              <img src={product.logo} alt="" className="product-identity-logo" />
+              <p className="product-identity-name">{product.name}</p>
+            </div>
             <h1>{product.tagline}</h1>
             <p>{product.summary}</p>
             <CommandBlock command={product.installCommand} accent={product.accent} />
@@ -152,7 +154,7 @@ function ProductPage({ slug }: { slug: string }) {
                 Open repository
               </a>
               {sibling ? (
-                <a className="button button-secondary" href={`#/${sibling.slug}`}>
+                <a className="button button-secondary" href={`/${sibling.slug}`}>
                   View {sibling.name}
                 </a>
               ) : null}
@@ -165,6 +167,6 @@ function ProductPage({ slug }: { slug: string }) {
 }
 
 export default function App() {
-  const path = useHashPath();
+  const path = usePathRoute();
   return path ? <ProductPage slug={path} /> : <HomePage />;
 }
